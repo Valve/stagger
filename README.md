@@ -32,8 +32,7 @@ emails = get_emails()
 schedule = Stagger.distribute(emails, 30)
 ```
 
-`schedule` is array of arrays, each item is a pair of original item,
-associated with `Time`:
+`schedule` is an array of arrays, each item is a pair of original item, associated with `Time`:
 
 ```ruby
 Time.now # 2014-06-27 14:00:00 +0400
@@ -45,7 +44,7 @@ schedule = Stagger.distribute([1,2,3], 1)
 First item is scheduled as soon as possible, while the rest is
 distributed evenly across business days.
 
-TODO: plans to add support for holidays / initial delay and working hours in the future.
+**TODO: plans to add support for holidays / initial delay and working hours in the future.**
 
 
 ## Installation
@@ -61,6 +60,11 @@ And then execute:
 Or install it yourself as:
 
     $ gem install stagger
+
+### Compatibility
+
+This gem is tested against MRI 2.1 & JRuby 1.7.11 (1.9 mode) on Travis
+CI
 
 ## Contributing
 
