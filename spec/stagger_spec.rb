@@ -207,6 +207,50 @@ RSpec.describe Stagger do
               expect(results[1][1]).to eq Time.local(2014, 7, 1, 12) # Wednesday
             end
           end
+
+          it 'schedules three items in two days if both days are business days' do
+            t = Time.local(2014, 6, 26, 14) # - 2pm, Thursday
+            Timecop.freeze(t) do
+              results = Stagger.distribute([1, 2, 3], 2)
+              expect(results[0][1]).to eq(t)
+              expect(results[1][1]).to eq Time.local(2014, 6, 27, 1, 20) # Friday
+              expect(results[2][1]).to eq Time.local(2014, 6, 27, 12, 40) # Friday
+            end
+          end
+
+          it 'schedules three items in two days if today is Friday' do
+            t = Time.local(2014, 6, 27, 14) # - 2pm, Friday
+            Timecop.freeze(t) do
+              results = Stagger.distribute([1, 2, 3], 2)
+              expect(results[0][1]).to eq(t) # Friday
+              expect(results[1][1]).to eq Time.local(2014, 6, 30, 1, 20) # Monday
+              expect(results[2][1]).to eq Time.local(2014, 6, 30, 12, 40) # Monday
+            end
+          end
+
+          it 'schedules three items in two days if today is Saturday' do
+            t = Time.local(2014, 6, 28, 14) # - 2pm, Saturday
+            Timecop.freeze(t) do
+              results = Stagger.distribute([1, 2, 3], 2)
+              expect(results[0][1]).to eq Time.local(2014, 6, 30) # Monday midnight
+              expect(results[1][1]).to eq Time.local(2014, 6, 30, 16) # Monday 4pm
+              expect(results[2][1]).to eq Time.local(2014, 7, 1, 8) # Tuesday 8 am
+            end
+          end
+
+          it 'schedules many items in 30 days' do
+            t = Time.local(2014, 6, 27, 14) # - 2pm, Friday
+            Timecop.freeze(t) do
+              results = Stagger.distribute((1..100).to_a, 30)
+              expect(results[0][1]).to eq t
+              expect(results[1][1]).to eq Time.local(2014, 6, 27, 21, 3, 36)
+              expect(results[2][1]).to eq Time.local(2014, 6, 30, 4, 7, 12)
+              expect(results[18][1]).to eq Time.local(2014, 7, 4, 21, 4, 48)
+              expect(results[19][1]).to eq Time.local(2014, 7, 7, 4, 8, 24)
+              expect(results[35][1]).to eq Time.local(2014, 7, 11, 21, 6)
+              expect(results[99][1]).to eq Time.local(2014, 8, 7, 16, 56, 24)
+            end
+          end
         end
       end
     end
