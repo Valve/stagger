@@ -90,8 +90,8 @@ RSpec.describe Stagger do
             t = Time.local(2014, 6, 28, 14) # - 2pm, Saturday
             Timecop.freeze(t) do
               results = Stagger.distribute([1,2], 1)
-              expect(results[0][1]).to eq Time.local(2014, 6, 30)
-              expect(results[1][1]).to eq Time.local(2014, 6, 30, 12)
+              expect(results[0][1]).to eq Time.local(2014, 6, 30) # Monday
+              expect(results[1][1]).to eq Time.local(2014, 6, 30, 12) # Monday
             end
           end
 
@@ -99,8 +99,8 @@ RSpec.describe Stagger do
             t = Time.local(2014, 6, 29, 14) # - 2pm, Sunday
             Timecop.freeze(t) do
               results = Stagger.distribute([1,2], 1)
-              expect(results[0][1]).to eq Time.local(2014, 6, 30)
-              expect(results[1][1]).to eq Time.local(2014, 6, 30, 12)
+              expect(results[0][1]).to eq Time.local(2014, 6, 30) # Monday
+              expect(results[1][1]).to eq Time.local(2014, 6, 30, 12) # Monday
             end
           end
 
@@ -121,9 +121,9 @@ RSpec.describe Stagger do
             t = Time.local(2014, 6, 28, 14) # - 2pm, Saturday
             Timecop.freeze(t) do
               results = Stagger.distribute([1, 2, 3], 1)
-              expect(results[0][1]).to eq Time.local(2014, 6, 30)
-              expect(results[1][1]).to eq Time.local(2014, 6, 30, 8)
-              expect(results[2][1]).to eq Time.local(2014, 6, 30, 16)
+              expect(results[0][1]).to eq Time.local(2014, 6, 30) # Monday
+              expect(results[1][1]).to eq Time.local(2014, 6, 30, 8) # Monday
+              expect(results[2][1]).to eq Time.local(2014, 6, 30, 16) # Monday
             end
           end
 
@@ -131,9 +131,9 @@ RSpec.describe Stagger do
             t = Time.local(2014, 6, 29, 14) # - 2pm, Sunday
             Timecop.freeze(t) do
               results = Stagger.distribute([1, 2, 3], 1)
-              expect(results[0][1]).to eq Time.local(2014, 6, 30)
-              expect(results[1][1]).to eq Time.local(2014, 6, 30, 8)
-              expect(results[2][1]).to eq Time.local(2014, 6, 30, 16)
+              expect(results[0][1]).to eq Time.local(2014, 6, 30) # Monday
+              expect(results[1][1]).to eq Time.local(2014, 6, 30, 8) # Monday
+              expect(results[2][1]).to eq Time.local(2014, 6, 30, 16) # Monday
             end
           end
 
@@ -163,23 +163,50 @@ RSpec.describe Stagger do
             end
           end
 
-          it 'schedules two items in 3 days if all days are business days' do
-            t = Time.local(2014, 6, 25, 14) # - 2pm, Wednesday
+          it 'schedules two items in two days if today is Friday' do
+            t = Time.local(2014, 6, 27, 14) # - 2pm, Friday
             Timecop.freeze(t) do
-              results = Stagger.distribute([1,2], 3)
-              expect(results[0][1]).to eq(t)
-              expect(results[1][1]).to eq Time.local(2014, 6, 26, 19) # - 2am, Friday
+              results = Stagger.distribute([1, 2], 2)
+              expect(results[0][1]).to eq Time.local(2014, 6, 27, 14) # Friday
+              expect(results[1][1]).to eq Time.local(2014, 6, 30, 7) # Monday
             end
           end
 
-          #it 'schedules two items in 3 days if 2nd and 3rd days are business days' do
-            #t = Time.local(2014, 6, 29, 14) # - 2pm, Sunday
-            #Timecop.freeze(t) do
-              #results = Stagger.distribute([1,2], 3)
-              #expect(results[0][1]).to eq Time.local(2014, 6, 30, 0)
-              #expect(results[1][1]).to eq Time.local(2014, 7, 1, 0)
-            #end
-          #end
+          it 'schedules two items in two days if today is Saturday' do
+            t = Time.local(2014, 6, 28, 14) # - 2pm, Saturday
+            Timecop.freeze(t) do
+              results = Stagger.distribute([1, 2], 2)
+              expect(results[0][1]).to eq Time.local(2014, 6, 30) # Monday
+              expect(results[1][1]).to eq Time.local(2014, 7, 1) # Tuesday
+            end
+          end
+
+          it 'schedules two items in 3 days if all days are business days' do
+            t = Time.local(2014, 6, 25, 14) # - 2pm, Wednesday
+            Timecop.freeze(t) do
+              results = Stagger.distribute([1, 2], 3)
+              expect(results[0][1]).to eq(t)
+              expect(results[1][1]).to eq Time.local(2014, 6, 26, 19) # - 7 pm, Thursday
+            end
+          end
+
+          it 'schedules two items in 3 days if today is Friday' do
+            t = Time.local(2014, 6, 27, 14) # - 2pm, Friday
+            Timecop.freeze(t) do
+              results = Stagger.distribute([1, 2], 3)
+              expect(results[0][1]).to eq t
+              expect(results[1][1]).to eq Time.local(2014, 6, 30, 19) # Monday
+            end
+          end
+
+          it 'schedules two items in 3 days if today is Saturday' do
+            t = Time.local(2014, 6, 28, 14) # - 2pm, Friday
+            Timecop.freeze(t) do
+              results = Stagger.distribute([1, 2], 3)
+              expect(results[0][1]).to eq Time.local(2014, 6, 30) # Monday
+              expect(results[1][1]).to eq Time.local(2014, 7, 1, 12) # Wednesday
+            end
+          end
         end
       end
     end

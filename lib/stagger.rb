@@ -13,7 +13,7 @@ module Stagger
           time = time + period_in_seconds
           arr
         else
-          time = time + 1.day
+          time = time + SECONDS_IN_DAY
           redo
         end
       end
@@ -42,11 +42,7 @@ module Stagger
 
     def get_period_in_seconds(items_size, number_of_days, starting_time)
       now = Time.now
-      business_days_count = 0
-      number_of_days.times do |i|
-        business_days_count += 1 if business_day?(starting_time + i * SECONDS_IN_DAY)
-      end
-      total_period = business_days_count * SECONDS_IN_DAY
+      total_period = number_of_days * SECONDS_IN_DAY
       if business_day?(now)
         total_period -= (now - at_beginning_of_day(now))
       end

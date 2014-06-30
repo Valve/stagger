@@ -11,7 +11,8 @@ it gets complicated.
 
 Real life business cases:
 
-Schedule 100 emails to be distributed evenly across next 14 days, skipping weekends:
+Schedule 100 emails to be distributed evenly across next 14 business
+days:
 
 ```ruby
 emails = get_emails()
@@ -22,10 +23,11 @@ Schedule one item to be sent as soon as possible but on business day only:
 
 ```ruby
 email = get_email() # only one email
-schedule = Stagger.distribute([email], 1) # distribute across 1 day
+schedule = Stagger.distribute([email], 1) # i.e. distribute across 1
+business day
 ```
 
-Schedule 1000 emails to be sent across next 30 days, but only during business days:
+Schedule 1000 emails to be sent across next 30 business days:
 
 ```ruby
 emails = get_emails()
