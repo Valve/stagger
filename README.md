@@ -15,7 +15,7 @@ Schedule 100 emails to be distributed evenly across next 14 days, skipping weeke
 
 ```ruby
 emails = get_emails()
-schedule = Stagger.distribute(emails, 7)
+schedule = Stagger.distribute(emails, 14)
 ```
 
 Schedule one item to be sent as soon as possible but on business day only:
@@ -33,7 +33,14 @@ schedule = Stagger.distribute(emails, 30)
 ```
 
 `schedule` is array of arrays, each item is a pair of original item,
-associated with `Time`.
+associated with `Time`:
+
+```ruby
+Time.now # 2014-06-27 14:00:00 +0400
+# 3 items will be distributed today
+schedule = Stagger.distribute([1,2,3], 1)
+=> # [[1, 2014-6-27 14:00:00], [2, 2014-6-27 17:20:00], [3, 2014-6-27 20:40:00]]
+```
 
 First item is scheduled as soon as possible, while the rest is
 distributed evenly across business days.
