@@ -1,5 +1,7 @@
 # Stagger
 
+[![Build Status](https://travis-ci.org/Valve/stagger.svg?branch=master)](https://travis-ci.org/Valve/stagger)
+
 Stagger is a simple gem that evenly distributes items across business
 days.
 On the surface, this tasks seems simple, but when you have a lot of
