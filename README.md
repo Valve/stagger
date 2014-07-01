@@ -7,7 +7,10 @@ days.
 On the surface, this tasks seems simple, but when you have a lot of
 tasks,
 that should be scheduled across business days, that span several weeks,
-it gets complicated.
+it gets complicated. Stagger has good test coverage, I covered all cases
+I could think of with specs.
+
+Stagger has no runtime dependencies.
 
 Real life business cases:
 
@@ -46,7 +49,17 @@ schedule = Stagger.distribute([1,2,3], 1)
 First item is scheduled as soon as possible, while the rest is
 distributed evenly across business days.
 
-**TODO: plans to add support for holidays / initial delay and working hours in the future.**
+## Rails integration
+
+Since this gem has no dependencies, it returns instances of ruby `Time`.
+But when `ActiveSupport` is available, it returns instances of rails'
+`ActiveSupport::TimeWithZone` with your current timezone already set.
+In other words, you don't need to do anything when using this gem with
+Rails.
+
+## Plans
+
+Plans to add support for holidays / initial delay and working hours in the future.**
 
 
 ## Installation
