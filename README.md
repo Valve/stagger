@@ -9,7 +9,10 @@ days.
 On the surface, this tasks seems simple, but when you have a lot of
 tasks,
 that should be scheduled across business days, that span several weeks,
-it gets complicated. Stagger has good test coverage, I covered all cases
+it gets complicated. When you have both plain ruby `Time` and
+`ActiveSupport::TimeWithZone`, it gets even more hairy.
+
+Stagger has good test coverage, I covered all cases
 I could think of with specs.
 
 Stagger has no runtime dependencies.
