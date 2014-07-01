@@ -1,6 +1,8 @@
 # Stagger
 
 [![Build Status](https://travis-ci.org/Valve/stagger.svg?branch=master)](https://travis-ci.org/Valve/stagger)
+[![Gem Version](https://badge.fury.io/rb/stagger.svg)](http://badge.fury.io/rb/stagger)
+[![Code Climate](https://codeclimate.com/github/Valve/stagger.png)](https://codeclimate.com/github/Valve/stagger)
 
 Stagger is a simple gem that evenly distributes items across business
 days.
