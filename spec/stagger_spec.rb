@@ -255,13 +255,11 @@ RSpec.describe Stagger do
 
         context 'active support integration' do
           it 'returns ActiveSupport::TimeWithZone when ActiveSupport is available' do
-            fork do 
-              require 'active_support/all'
-              Time.zone = 'Moscow'
-              pair = Stagger.distribute([1], 1).first
-              expect(pair.first).to eq(1)
-              expect(pair.last).to be_a ::ActiveSupport::TimeWithZone
-            end
+            require 'active_support/all'
+            Time.zone = 'Moscow'
+            pair = Stagger.distribute([1], 1).first
+            expect(pair.first).to eq(1)
+            expect(pair.last).to be_a ::ActiveSupport::TimeWithZone
           end
         end
       end
