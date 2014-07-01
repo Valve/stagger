@@ -7,7 +7,7 @@ module Stagger
       return [] if Array(items).empty? || number_of_days.to_i < 1
       time = get_starting_time
       period_in_seconds = get_period_in_seconds(items.size, number_of_days, time)
-      items = items.reduce [] do |arr, item|
+      items.reduce [] do |arr, item|
         if business_day?(time)
           arr << [item, time]
           time = time + period_in_seconds
@@ -16,11 +16,6 @@ module Stagger
           time = time + SECONDS_IN_DAY
           redo
         end
-      end
-      if active_support_time?
-        items.map{|i,t| [i, t.in_time_zone(Time.zone)]}
-      else
-        items
       end
     end
 
@@ -35,7 +30,7 @@ module Stagger
     end
 
     def get_starting_time
-      tc = Time.now
+      tc = current_time
       if tc.saturday?
         at_beginning_of_day(tc) + SECONDS_IN_DAY * 2
       elsif tc.sunday?
@@ -46,7 +41,7 @@ module Stagger
     end
 
     def get_period_in_seconds(items_size, number_of_days, starting_time)
-      now = Time.now
+      now = current_time
       total_period = number_of_days * SECONDS_IN_DAY
       if business_day?(now)
         total_period -= (now - at_beginning_of_day(now))
@@ -55,11 +50,20 @@ module Stagger
     end
 
     def at_beginning_of_day(time)
-      Time.new(time.year, time.month, time.day)
+      active_support_time? ? time.at_beginning_of_day : Time.new(time.year, time.month, time.day)
     end
 
     def at_end_of_day(time)
-      at_beginning_of_day(time) + SECONDS_IN_DAY - 0.000000000001
+      if active_support_time?
+        time.at_end_of_day
+      else
+        at_beginning_of_day(time) + SECONDS_IN_DAY - 0.000000000001
+      end
+    end
+
+
+    def current_time
+      active_support_time? ? Time.zone.now : Time.now
     end
 
     def active_support_time?

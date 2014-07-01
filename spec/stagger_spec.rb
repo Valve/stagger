@@ -254,12 +254,24 @@ RSpec.describe Stagger do
         end
 
         context 'active support integration' do
-          it 'returns ActiveSupport::TimeWithZone when ActiveSupport is available' do
+          before do
             require 'active_support/all'
-            Time.zone = 'Moscow'
+            Time.zone = 'Asia/Tokyo'
+          end
+          it 'returns ActiveSupport::TimeWithZone when ActiveSupport is available' do
             pair = Stagger.distribute([1], 1).first
             expect(pair.first).to eq(1)
             expect(pair.last).to be_a ::ActiveSupport::TimeWithZone
+          end
+
+          it 'schedules three items in two days if today is Friday' do
+            t = Time.zone.local(2014, 6, 27, 14) # - 2pm, Friday
+            Timecop.freeze(t) do
+              results = Stagger.distribute([1, 2, 3], 2)
+              expect(results[0][1]).to eq(t) # Friday
+              expect(results[1][1]).to eq Time.zone.local(2014, 6, 30, 1, 20) # Monday
+              expect(results[2][1]).to eq Time.zone.local(2014, 6, 30, 12, 40) # Monday
+            end
           end
         end
       end
