@@ -33,6 +33,7 @@ Schedule one item to be sent as soon as possible but on a business day only:
 email = get_email() # only one email
 schedule = Stagger.distribute([email], 1) # i.e. distribute across 1
 business day
+```
 
 Schedule one item to be sent after a delay of 5 minutes, but on a business day only:
 
