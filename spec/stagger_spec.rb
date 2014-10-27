@@ -47,12 +47,57 @@ RSpec.describe Stagger do
           end
         end
 
+        it 'schedules to run after a delay if today is a business day' do
+          t = Time.local(2014, 6, 27, 18) # 6pm, Friday
+          Timecop.freeze(t) do
+            # stagger after a delay of 5 minutes
+            pair = Stagger.distribute([1], 1, delay: 300).first
+            expect(pair.last).to eq Time.local(2014, 6, 27, 18, 5)
+          end
+        end
+
+        it 'schedules to run after a big delay that spans over the weekend' do
+          t = Time.local(2014, 6, 27, 18) # 6pm, Friday
+          Timecop.freeze(t) do
+            # stagger after a delay of 72 hours
+            pair = Stagger.distribute([1], 1, delay: 72 * 60 * 60).first
+            expect(pair.last).to eq Time.local(2014, 6, 30, 18)
+          end
+        end
+
         it 'schedules immediately if today is a business day and number of days > 1' do
           # a dumb test, actually, but I need to cover it
           t = Time.local(2014, 6, 27, 18) # 6pm, Friday
           Timecop.freeze(t) do
             pair = Stagger.distribute([1], 2).first
             expect(pair.last).to eq t
+          end
+        end
+
+        it 'schedules to run after a delay if today is a business day and number of days > 1' do
+          t = Time.local(2014, 6, 27, 18) # 6pm, Friday
+          Timecop.freeze(t) do
+            # stagger after a delay of 5 minutes
+            pair = Stagger.distribute([1], 2, delay: 300).first
+            expect(pair.last).to eq Time.local(2014, 6, 27, 18, 5)
+          end
+        end
+
+        it 'schedules to run on Monday business day if delay will schedule the first item run on Saturday' do
+          t = Time.local(2014, 6, 27, 18) # 6pm, Friday
+          Timecop.freeze(t) do
+            # stagger after a delay of 7 hours
+            pair = Stagger.distribute([1], 1, delay: 7 * 60 * 60).first
+            expect(pair.last).to eq Time.local(2014, 6, 30) # Midnight, Monday
+          end
+        end
+
+        it 'schedules to run on Monday business day if delay will schedule the first item run on Sunday' do
+          t = Time.local(2014, 6, 27, 18) # 6pm, Friday
+          Timecop.freeze(t) do
+            # stagger after a delay of 31 hours (1 in the morning of Sunday)
+            pair = Stagger.distribute([1], 1, delay: 31 * 60 * 60).first
+            expect(pair.last).to eq Time.local(2014, 6, 30) # Midnight, Monday
           end
         end
 

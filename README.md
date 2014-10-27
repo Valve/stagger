@@ -27,12 +27,22 @@ emails = get_emails()
 schedule = Stagger.distribute(emails, 14)
 ```
 
-Schedule one item to be sent as soon as possible but on business day only:
+Schedule one item to be sent as soon as possible but on a business day only:
 
 ```ruby
 email = get_email() # only one email
 schedule = Stagger.distribute([email], 1) # i.e. distribute across 1
 business day
+
+Schedule one item to be sent after a delay of 5 minutes, but on a business day only:
+
+```ruby
+email = get_email() # only one email
+# specify delay in seconds
+schedule = Stagger.distribute([email], 1, delay: 5 * 60) # i.e. distribute across 1
+business day
+```
+
 ```
 
 Schedule 1000 emails to be sent across next 30 business days:
@@ -62,9 +72,20 @@ But when `ActiveSupport` is available, it returns instances of rails'
 In other words, you don't need to do anything when using this gem with
 Rails.
 
+## Options
+
+### Delay
+
+Specified in seconds, default is 0.
+Will make the first and subsequent items to be shifted ahead in time.
+Useful to make for scenarios when first item w/out an initial delay will
+have been in the past by the time the processing logic will pick it up.
+If the delay makes the first item to be scheduled on a weekend, it will
+be sent on Monday at 00 hours.
+
 ## Plans
 
-Plans to add support for holidays / initial delay and working hours in the future.**
+Plans to add support for holidays and working hours in the future.**
 
 
 ## Installation

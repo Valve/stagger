@@ -3,9 +3,14 @@ require "stagger/version"
 module Stagger
   SECONDS_IN_DAY = 86_400
   class << self
-    def distribute(items, number_of_days)
+    # Evenly distributes items acros business days
+    # @param [Array, items] items to stagger
+    # @param [Integer, number_of_days] number of business days to distribute within
+    # @param [Integer, delay] number of seconds to delay the staggering
+    # @return [Array] array of arrays, where first subarray element is a scheduled DateTime, second is the staggered item
+    def distribute(items, number_of_days, delay: 0)
       return [] if Array(items).empty? || number_of_days.to_i < 1
-      time = get_starting_time
+      time = get_starting_time(delay)
       period_in_seconds = get_period_in_seconds(items.size, number_of_days, time)
       items.reduce [] do |arr, item|
         if business_day?(time)
@@ -29,8 +34,8 @@ module Stagger
       end
     end
 
-    def get_starting_time
-      tc = current_time
+    def get_starting_time(delay)
+      tc = current_time + delay
       if tc.saturday?
         at_beginning_of_day(tc) + SECONDS_IN_DAY * 2
       elsif tc.sunday?
