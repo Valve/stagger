@@ -17,17 +17,16 @@ I could think of with specs.
 
 Stagger has no runtime dependencies.
 
-Real life business cases:
+**Real life business cases**:
 
-Schedule 100 emails to be distributed evenly across next 14 business
-days:
+> Schedule 100 emails to be distributed evenly across next 14 business days:
 
 ```ruby
 emails = get_emails()
 schedule = Stagger.distribute(emails, 14)
 ```
 
-Schedule one item to be sent as soon as possible but on a business day only:
+> Schedule one item to be sent as soon as possible but on a business day only:
 
 ```ruby
 email = get_email() # only one email
@@ -35,7 +34,7 @@ schedule = Stagger.distribute([email], 1) # i.e. distribute across 1
 business day
 ```
 
-Schedule one item to be sent after a delay of 5 minutes, but on a business day only:
+> Schedule one item to be sent after a delay of 5 minutes, but on a business day only:
 
 ```ruby
 email = get_email() # only one email
@@ -44,9 +43,7 @@ schedule = Stagger.distribute([email], 1, delay: 5 * 60) # i.e. distribute acros
 business day
 ```
 
-```
-
-Schedule 1000 emails to be sent across next 30 business days:
+> Schedule 1000 emails to be sent across next 30 business days:
 
 ```ruby
 emails = get_emails()
@@ -62,7 +59,7 @@ schedule = Stagger.distribute([1,2,3], 1)
 => # [[1, 2014-6-27 14:00:00], [2, 2014-6-27 17:20:00], [3, 2014-6-27 20:40:00]]
 ```
 
-First item is scheduled as soon as possible, while the rest is
+First item is scheduled as soon as possible (after an optional delay), while the rest is
 distributed evenly across business days.
 
 ## Rails integration
