@@ -30,7 +30,7 @@ schedule = Stagger.distribute(emails, 14)
 
 ```ruby
 email = get_email() # only one email
-schedule = Stagger.distribute([email], 1) # i.e. distribute across 1
+schedule = Stagger.distribute([email], 1)
 business day
 ```
 
@@ -39,8 +39,7 @@ business day
 ```ruby
 email = get_email() # only one email
 # specify delay in seconds
-schedule = Stagger.distribute([email], 1, delay: 5 * 60) # i.e. distribute across 1
-business day
+schedule = Stagger.distribute([email], 1, delay: 5 * 60)
 ```
 
 > Schedule 1000 emails to be sent across next 30 business days:
@@ -103,8 +102,7 @@ Or install it yourself as:
 
 ### Compatibility
 
-This gem is tested against MRI 2.1 & JRuby 1.7.11 (1.9 mode) on Travis
-CI
+This gem is tested against MRI 2.1.x on Travis CI
 
 ## Contributing
 
