@@ -77,9 +77,10 @@ Rails.
 ### Delay
 
 Specified in seconds, default is 0.
+
 Will make the first and subsequent items to be shifted ahead in time.
-Useful to make for scenarios when first item w/out an initial delay will
-have been in the past by the time the processing logic will pick it up.
+Useful in the scenarios when the first item without an initial delay will
+have been in the past by the time the processing logic picks it up.
 If the delay makes the first item to be scheduled on a weekend, it will
 be sent on Monday at 00 hours.
 
